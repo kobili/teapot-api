@@ -13,34 +13,35 @@ export const addUserGateway = (stack: Stack, rootApiGateway: LambdaRestApi) => {
 
     // POST /user
     userGateway.addMethod('POST', createUserLambdaIntegration(stack));
+
+    // DELETE /user/{userId}
+    userIdPath.addMethod('DELETE', deleteUserLambdaIntegration(stack));
 }
 
 const getUserLambdaIntegration = (stack: Stack): LambdaIntegration => {
-    const getUserHandler = new NodejsFunction(stack, 'getUserHandler', {
-        runtime: Runtime.NODEJS_16_X,
-        entry: path.join(__dirname, `../../src/lambda/user/getUser.ts`),
-        handler: 'lambdaHandler',
-        timeout: Duration.seconds(30),
-        architecture: Architecture.ARM_64,
-        bundling: {
-            externalModules: ['pg-native']
-        }
-    });
-
+    const getUserHandler = lambdaHandlerFactory(stack, 'getUserHandler', path.join(__dirname, `../../src/lambda/user/getUser.ts`));
     return new LambdaIntegration(getUserHandler);
 }
 
 const createUserLambdaIntegration = (stack: Stack): LambdaIntegration => {
-    const createUserHandler = new NodejsFunction(stack, 'createUserHandler', {
+    const createUserHandler = lambdaHandlerFactory(stack, 'createUserHandler', path.join(__dirname, `../../src/lambda/user/createUser.ts`));
+    return new LambdaIntegration(createUserHandler);
+}
+
+const deleteUserLambdaIntegration = (stack: Stack): LambdaIntegration => {
+    const deleteUserHandler = lambdaHandlerFactory(stack, 'deleteUserHandler', path.join(__dirname, `../../src/lambda/user/deleteUser.ts`));
+    return new LambdaIntegration(deleteUserHandler);
+}
+
+const lambdaHandlerFactory = (stack: Stack, awsId: string, sourceFile: string) => {
+    return new NodejsFunction(stack, awsId, {
         runtime: Runtime.NODEJS_16_X,
-        entry: path.join(__dirname, `../../src/lambda/user/createUser.ts`),
+        entry: sourceFile,
         handler: 'lambdaHandler',
         timeout: Duration.seconds(30),
-        architecture: Architecture.ARM_64,
+        architecture: Architecture.ARM_64,  // CHANGE THIS DEPENDING ON LOCAL MACHINE,
         bundling: {
-            externalModules: ['pg-native']
+            externalModules: ['pg-native']  // MAY CAUSE PROBLEMS DURING DEPLOYMENT (?)
         }
     });
-
-    return new LambdaIntegration(createUserHandler);
 }
