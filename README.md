@@ -17,6 +17,10 @@ The repo is set up so that the docker instances launched by SAM are connected to
 - run `cdk synth` to generate a Cloudformation Template
 - run `npm run sam-run-api` or `yarn sam-run-api` to launch a local instance of the API
 
+## Todos
+- setup database migrations to be run/synched when connected to db
+- Test deployment
+
 ## Useful commands
 
 * `npm run build`   compile typescript to js
