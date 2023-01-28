@@ -6,9 +6,28 @@ import path = require("path");
 
 export const addUserGateway = (stack: Stack, rootApiGateway: LambdaRestApi) => {
     const userGateway = rootApiGateway.root.addResource('user');
+    const userIdPath = userGateway.addResource('{userId}');
+
+    // GET /user/{userId}
+    userIdPath.addMethod('GET', getUserLambdaIntegration(stack));
 
     // POST /user
     userGateway.addMethod('POST', createUserLambdaIntegration(stack));
+}
+
+const getUserLambdaIntegration = (stack: Stack): LambdaIntegration => {
+    const getUserHandler = new NodejsFunction(stack, 'getUserHandler', {
+        runtime: Runtime.NODEJS_16_X,
+        entry: path.join(__dirname, `../../src/lambda/user/getUser.ts`),
+        handler: 'lambdaHandler',
+        timeout: Duration.seconds(30),
+        architecture: Architecture.ARM_64,
+        bundling: {
+            externalModules: ['pg-native']
+        }
+    });
+
+    return new LambdaIntegration(getUserHandler);
 }
 
 const createUserLambdaIntegration = (stack: Stack): LambdaIntegration => {
