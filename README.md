@@ -17,9 +17,57 @@ The repo is set up so that the docker instances launched by SAM are connected to
 - run `cdk synth` to generate a Cloudformation Template
 - run `npm run sam-run-api` or `yarn sam-run-api` to launch a local instance of the API
 
-## Todos
-- setup database migrations to be run/synched when connected to db
-- Test deployment
+## Running Database Migrations
+The scripts for applying migrations are located in the `db-migrations` folder.
+```
+cd db-migrations
+```
+
+### Creating a new migration
+```
+npm run typeorm:create-migration --name=<MIGRATION_NAME>
+```
+The above will create a new migration file in `db-migrations/migrations/`
+- Add the SQL queries to update the database in the `up(queryRunner: QueryRunner)` method
+- Add the SQL queries to reverse the database update in the `down(queryRunner: QueryRunner)` method
+
+In the file `typeorm.config.ts`, import the class that was generated in the migration file and add it to the `migrations` field in the datasource object
+```typescript
+import { DataSource } from "typeorm";
+import { AppUser } from "./entities/AppUser";
+import { CreateUserTable1674938561349 } from "./migrations/1674938561349-CreateUserTable";
+
+export const dataSource = new DataSource({
+    type: 'postgres',
+    host: 'localhost',
+    port: 5432,
+    database: 'teapot_db',
+    username: 'postgres',
+    password: 'password',
+    synchronize: false,
+    logging: true,
+    entities: [ AppUser ],
+    subscribers: [],
+    migrations: [
+        CreateUserTable1674938561349
+    ]
+});
+```
+
+### Running database migrations
+After configuring the `DataSource` object with the necessary database information (`host`, `port`, `database` and credentials) run
+```
+npm run typeorm:run-migrations
+```
+
+Connect to the database using a PostgreSQL compatible SQL db client (eg. pgAdmin) and check the database's `migrations` table. This table keeps track of all applied migrations. The migrations you've just applied should appear in this table.
+
+### Reversing database migrations
+Simply run
+```
+npm run typeorm:revert-migration
+```
+This command will reverse db migrations __one at a time__. 
 
 ## Useful commands
 
