@@ -2,6 +2,7 @@ import { APIGatewayEvent, APIGatewayProxyHandler, Context } from "aws-lambda";
 import { getDataSource } from "../../db/data-source";
 import { AppUser } from "../../db/entity/AppUser";
 import { v4 as uuid } from 'uuid';
+import { emptyRequestBodyResult, internalServerErrorResult } from "../../utils/errorResponses";
 
 interface CreateUserRequest {
     firstName: string;
@@ -20,12 +21,7 @@ interface CreateUserResponse {
 export const lambdaHandler: APIGatewayProxyHandler = async (event: APIGatewayEvent, context: Context) => {
     console.log(`Received event: ${JSON.stringify(event)}`);
     if (event.body === null) {
-        return {
-            statusCode: 400,
-            body: JSON.stringify({
-                message: "Request cannot have empty body"
-            })
-        };
+        return emptyRequestBodyResult();
     }
 
     const requestBody = JSON.parse(event.body) as CreateUserRequest;
@@ -53,13 +49,7 @@ export const lambdaHandler: APIGatewayProxyHandler = async (event: APIGatewayEve
             } as CreateUserResponse)
         };
     } catch (error) {
-        return {
-            statusCode: 500,
-            body: JSON.stringify({
-                message: "Something went wrong",
-                error: error
-            })
-        };
+        return internalServerErrorResult(error);
     }
 }
 

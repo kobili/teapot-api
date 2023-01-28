@@ -1,6 +1,7 @@
 import { APIGatewayEvent, APIGatewayProxyHandler, Context } from "aws-lambda";
 import { getDataSource } from "../../db/data-source";
 import { AppUser } from "../../db/entity/AppUser";
+import { emptyRequestBodyResult, internalServerErrorResult, userNotFoundResult } from "../../utils/errorResponses";
 
 interface UpdateUserRequest {
     firstName: string;
@@ -18,12 +19,7 @@ interface UpdateUserResponse {
 export const lambdaHandler: APIGatewayProxyHandler = async (event: APIGatewayEvent, context: Context) => {
     console.log(`Received event: ${JSON.stringify(event)}`);
     if (event.body === null) {
-        return {
-            statusCode: 400,
-            body: JSON.stringify({
-                message: "Request cannot have empty body"
-            })
-        };
+        return emptyRequestBodyResult();
     }
 
     const userId = event.pathParameters!['userId']!;
@@ -40,12 +36,7 @@ export const lambdaHandler: APIGatewayProxyHandler = async (event: APIGatewayEve
         const user = await userRepo.findOneBy({ userId: userId });
 
         if (user === null) {
-            return {
-                statusCode: 404,
-                body: JSON.stringify({
-                    message: `Could not find user with id ${userId}`
-                })
-            };
+            return userNotFoundResult(userId);
         }
 
         user.firstName = requestBody.firstName;
@@ -65,12 +56,6 @@ export const lambdaHandler: APIGatewayProxyHandler = async (event: APIGatewayEve
             } as UpdateUserResponse)
         };
     } catch (error) {
-        return {
-            statusCode: 500,
-            body: JSON.stringify({
-                message: "Something went wrong",
-                error: error
-            })
-        };
+        return internalServerErrorResult(error);
     }
 }

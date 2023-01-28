@@ -1,6 +1,7 @@
 import { APIGatewayEvent, APIGatewayProxyHandler, Context } from "aws-lambda";
 import { getDataSource } from "../../db/data-source";
 import { AppUser } from "../../db/entity/AppUser";
+import { internalServerErrorResult, userNotFoundResult } from "../../utils/errorResponses";
 
 interface GetUserResponse {
     userId: string;
@@ -23,12 +24,7 @@ export const lambdaHandler: APIGatewayProxyHandler = async (event: APIGatewayEve
         const user = await userRepo.findOneBy({ userId: userId });
 
         if (user === null) {
-            return {
-                statusCode: 404,
-                body: JSON.stringify({
-                    message: `Could not find user with id ${userId}`
-                })
-            };
+            return userNotFoundResult(userId);
         }
 
         await dataSource.destroy();
@@ -43,12 +39,6 @@ export const lambdaHandler: APIGatewayProxyHandler = async (event: APIGatewayEve
             } as GetUserResponse)
         };
     } catch (error) {
-        return {
-            statusCode: 500,
-            body: JSON.stringify({
-                message: "Something went wrong",
-                error: error
-            })
-        };
+        return internalServerErrorResult(error);
     }
 }
