@@ -1,16 +1,17 @@
 import * as cdk from 'aws-cdk-lib';
+import { RestApi } from 'aws-cdk-lib/aws-apigateway';
 import { Construct } from 'constructs';
-// import * as sqs from 'aws-cdk-lib/aws-sqs';
+import { addUserGateway } from './api-gateways/userGateway';
 
 export class TeapotApiStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    // The code that defines your stack goes here
+    const rootApiGateway = new RestApi(this, 'teapot-api-gateway', {
+      restApiName: 'teapot-api',
+      deploy: true
+    });
 
-    // example resource
-    // const queue = new sqs.Queue(this, 'TeapotApiQueue', {
-    //   visibilityTimeout: cdk.Duration.seconds(300)
-    // });
+    addUserGateway(this, rootApiGateway);
   }
 }
