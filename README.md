@@ -1,8 +1,25 @@
-# Welcome to your CDK TypeScript project
+# Teapot API
 
-This is a blank project for CDK development with TypeScript.
+This is a CDK project that synthesizes and deploys a serverless API using AWS Lambda functions.
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+## Local Development
+
+### Requirements:
+- AWS CLI
+- AWS CDK
+- AWS SAM CLI
+- Node + NPM
+
+The repo is set up so that the docker instances launched by SAM are connected to a PostgreSQL database hosted on `localhost:5432/teapot_db` (you can see the db connection config [here](https://github.com/kobili/teapot-api/blob/main/src/db/data-source.ts))
+
+### Launching a local API instance
+- run `npm install` or `yarn install` to download dependencies
+- run `cdk synth` to generate a Cloudformation Template
+- run `npm run sam-run-api` or `yarn sam-run-api` to launch a local instance of the API
+
+## Todos
+- setup database migrations to be run/synched when connected to db
+- Test deployment
 
 ## Useful commands
 
