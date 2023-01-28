@@ -14,6 +14,9 @@ export const addUserGateway = (stack: Stack, rootApiGateway: LambdaRestApi) => {
     // POST /user
     userGateway.addMethod('POST', createUserLambdaIntegration(stack));
 
+    // PUT /user/{userId}
+    userIdPath.addMethod('PUT', updateUserLambdaIntegration(stack))
+
     // DELETE /user/{userId}
     userIdPath.addMethod('DELETE', deleteUserLambdaIntegration(stack));
 }
@@ -26,6 +29,11 @@ const getUserLambdaIntegration = (stack: Stack): LambdaIntegration => {
 const createUserLambdaIntegration = (stack: Stack): LambdaIntegration => {
     const createUserHandler = lambdaHandlerFactory(stack, 'createUserHandler', path.join(__dirname, `../../src/lambda/user/createUser.ts`));
     return new LambdaIntegration(createUserHandler);
+}
+
+const updateUserLambdaIntegration = (stack: Stack): LambdaIntegration => {
+    const updateUserHandler = lambdaHandlerFactory(stack, 'updateUserHandler', path.join(__dirname, `../../src/lambda/user/updateUser.ts`));
+    return new LambdaIntegration(updateUserHandler);
 }
 
 const deleteUserLambdaIntegration = (stack: Stack): LambdaIntegration => {
