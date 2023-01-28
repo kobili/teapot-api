@@ -1,6 +1,5 @@
 import { APIGatewayProxyResult } from 'aws-lambda';
 
-
 export const userNotFoundResult = (userId: string): APIGatewayProxyResult => {
     return {
         statusCode: 404,
