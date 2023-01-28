@@ -34,7 +34,6 @@ The above will create a new migration file in `db-migrations/migrations/`
 In the file `typeorm.config.ts`, import the class that was generated in the migration file and add it to the `migrations` field in the datasource object
 ```typescript
 import { DataSource } from "typeorm";
-import { AppUser } from "./entities/AppUser";
 import { CreateUserTable1674938561349 } from "./migrations/1674938561349-CreateUserTable";
 
 export const dataSource = new DataSource({
@@ -46,7 +45,7 @@ export const dataSource = new DataSource({
     password: 'password',
     synchronize: false,
     logging: true,
-    entities: [ AppUser ],
+    entities: [],
     subscribers: [],
     migrations: [
         CreateUserTable1674938561349

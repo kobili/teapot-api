@@ -1,5 +1,4 @@
 import { DataSource } from "typeorm";
-import { AppUser } from "./entities/AppUser";
 import { CreateUserTable1674938561349 } from "./migrations/1674938561349-CreateUserTable";
 
 export const dataSource = new DataSource({
@@ -11,7 +10,7 @@ export const dataSource = new DataSource({
     password: 'password',
     synchronize: false,
     logging: true,
-    entities: [ AppUser ],
+    entities: [],
     subscribers: [],
     migrations: [
         CreateUserTable1674938561349
