@@ -14,6 +14,9 @@ The repo is set up so that the docker instances launched by SAM are connected to
 
 ### Launching a local API instance
 - run `npm install` or `yarn install` to download dependencies
+- Depending on your machine, you will need to set the architecture for which the docker containers will be built
+    - This option can be set [here](https://github.com/kobili/teapot-api/blob/f4879d72770e28e8ba24f708f20c348da4a8fdcc/lib/api-gateways/userGateway.ts#L50)
+    - If you're running on a MacBook that is newer than late 2020, chances are it is an ARM64 machine. If not it's probably an X86_64 machine.
 - run `cdk synth` to generate a Cloudformation Template
 - run `npm run sam-run-api` or `yarn sam-run-api` to launch a local instance of the API
 
@@ -21,6 +24,11 @@ The repo is set up so that the docker instances launched by SAM are connected to
 The scripts for applying migrations are located in the `db-migrations` folder.
 ```
 cd db-migrations
+```
+
+It is itself an NPM project so you will have to install dependencies here too:
+```
+npm install
 ```
 
 ### Creating a new migration

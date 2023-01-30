@@ -49,7 +49,7 @@ const lambdaHandlerFactory = (stack: Stack, awsId: string, sourceFile: string) =
         timeout: Duration.seconds(30),
         architecture: Architecture.ARM_64,  // CHANGE THIS DEPENDING ON LOCAL MACHINE,
         bundling: {
-            externalModules: ['pg-native']  // MAY CAUSE PROBLEMS DURING DEPLOYMENT (?)
+            externalModules: ['pg-native']
         }
     });
 }
