@@ -14,7 +14,7 @@ export const internalServerErrorResult = (error: unknown): APIGatewayProxyResult
         statusCode: 500,
         body: JSON.stringify({
             message: "Something went wrong",
-            error: error
+            error: `${error}`
         })
     };
 }

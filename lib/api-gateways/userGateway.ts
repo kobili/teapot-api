@@ -21,22 +21,42 @@ export const addUserGateway = (stack: Stack, rootApiGateway: LambdaRestApi) => {
 }
 
 const getUserLambdaIntegration = (stack: Stack): LambdaIntegration => {
-    const getUserHandler = lambdaHandlerFactory(stack, 'getUserHandler', path.join(__dirname, `../../src/lambda/user/getUser.ts`));
+    const getUserHandler = lambdaHandlerFactory(
+        stack,
+        'getUserHandler',
+        path.join(__dirname, `../../src/lambda/user/getUser.ts`),
+        'lambdaHandler'
+    );
     return new LambdaIntegration(getUserHandler);
 }
 
 const createUserLambdaIntegration = (stack: Stack): LambdaIntegration => {
-    const createUserHandler = lambdaHandlerFactory(stack, 'createUserHandler', path.join(__dirname, `../../src/lambda/user/createUser.ts`));
+    const createUserHandler = lambdaHandlerFactory(
+        stack,
+        'createUserHandler',
+        path.join(__dirname, `../../src/lambda/user/createUser.ts`),
+        'lambdaHandler'
+    );
     return new LambdaIntegration(createUserHandler);
 }
 
 const updateUserLambdaIntegration = (stack: Stack): LambdaIntegration => {
-    const updateUserHandler = lambdaHandlerFactory(stack, 'updateUserHandler', path.join(__dirname, `../../src/lambda/user/updateUser.ts`));
+    const updateUserHandler = lambdaHandlerFactory(
+        stack,
+        'updateUserHandler',
+        path.join(__dirname, `../../src/lambda/user/updateUser.ts`),
+        'lambdaHandler'
+    );
     return new LambdaIntegration(updateUserHandler);
 }
 
 const deleteUserLambdaIntegration = (stack: Stack): LambdaIntegration => {
-    const deleteUserHandler = lambdaHandlerFactory(stack, 'deleteUserHandler', path.join(__dirname, `../../src/lambda/user/deleteUser.ts`));
+    const deleteUserHandler = lambdaHandlerFactory(
+        stack,
+        'deleteUserHandler',
+        path.join(__dirname, `../../src/lambda/user/deleteUser.ts`),
+        'lambdaHandler'
+    );
     return new LambdaIntegration(deleteUserHandler);
 }
 
